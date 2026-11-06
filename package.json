@@ -14,7 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
-    "verify": "node scripts/verify.mjs",
+    "verify": "node --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/verify.mjs",
     "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts"
   },
   "dependencies": {

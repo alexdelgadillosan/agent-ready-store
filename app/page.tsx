@@ -10,7 +10,7 @@ const FEATURES = [
   {
     icon: "◎",
     title: "Real MCP server",
-    body: "Five tools are served over Streamable HTTP at /api/mcp. Any MCP client can discover the catalog, reserve stock, create a cart and capture payment.",
+    body: "Five core tools are served over Streamable HTTP at /api/mcp. Any MCP client can discover the catalog, reserve stock, create a cart and capture payment. A sixth Channel3 discovery tool appears only when a real API key is configured.",
   },
   {
     icon: "◇",

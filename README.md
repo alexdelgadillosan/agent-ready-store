@@ -32,8 +32,9 @@ No claims of integration with ChatGPT or Gemini. No early-access features. No mo
 | Order | Shopify `draftOrderComplete(paymentPending: false)` — a real order in the Shopify admin |
 | Payment | PayPal Orders v2 **sandbox**: create order → buyer approves → capture |
 | Buyer agent | OpenAI-compatible chat completions with real function/tool calling |
-| Agent interface | MCP Streamable HTTP at `/api/mcp` with five tools |
+| Agent interface | MCP Streamable HTTP at `/api/mcp` with five core tools (+ optional Channel3 discovery) |
 | Dashboard | Next.js UI + AG Grid Community reading Postgres |
+| External discovery (optional) | Channel3 `/v1/search` — real key required; not part of the Shopify cart |
 
 **Sandbox is not a mock.** The PayPal sandbox is the production Orders v2 API with test credentials. The same code runs against live credentials by changing `PAYPAL_ENV=live`; the hackathon requires sandbox for submissions.
 
@@ -153,16 +154,14 @@ In Shopify admin → **Settings → Apps and sales channels → Develop apps →
 ```
 read_products
 read_inventory
-write_inventory
-read_orders
-write_orders
 write_draft_orders
-read_locations
 ```
 
-Install the app and copy the **Admin API access token** (`shpat_…`).
+These are the only scopes the code uses. Install the app and copy the **Admin API access token** (`shpat_…`).
 
 Create 8–12 products in the store. For each variant, enable **Track quantity** and set stock; untracked variants return `null` inventory and are cached as zero.
+
+A complete walkthrough for Shopify, PayPal and the LLM key is in [docs/CREDENTIALS.md](./docs/CREDENTIALS.md).
 
 ### PayPal sandbox
 
@@ -240,7 +239,7 @@ Open <http://localhost:3000/chat>, ask for a product, provide a shipping address
 | `LLM_MODEL` | no | Defaults to `gpt-4.1-mini` |
 | `APP_URL` | yes | Public URL used for PayPal return/cancel URLs |
 | `MCP_BEARER_TOKEN` | no | If set, `/api/mcp` requires this bearer token |
-| `CHANNEL3_API_KEY` | no | Not used; included only if a real integration is added |
+| `CHANNEL3_API_KEY` | no | Enables the optional sixth `search_external_products` tool against the real Channel3 API. Without a key the tool is not registered. |
 
 The Shopify token, PayPal secret, LLM key and database URL never reach the browser.
 
@@ -264,6 +263,7 @@ Authorization: Bearer <MCP_BEARER_TOKEN>   # only if configured
 | `create_cart` | Reserve stock, create Draft Order, calculate totals, create PayPal order |
 | `get_cart_status` | Cart totals, expiry and resulting order |
 | `complete_checkout` | Capture approved PayPal order and complete the Shopify order |
+| `search_external_products` | **Optional.** Registered only when `CHANNEL3_API_KEY` is set. Searches Channel3's real external catalog; results cannot be added to the Shopify cart. |
 
 Example `search_products` call:
 
@@ -368,7 +368,7 @@ Set `PAYPAL_WEBHOOK_ID` and subscribe the sandbox app to `CHECKOUT.ORDER.APPROVE
 - **Free shipping in the demo.** The Draft Order carries an explicit free-shipping line. A store that charges shipping needs a rate-selection step before the PayPal order is created.
 - **Polling, not webhooks, for stock.** The dashboard reads the cached stock and active reservations; run a sync after external inventory changes. The optional PayPal webhook is implemented, Shopify webhooks are not.
 - **No early-access claims.** Store Sync, Agent Ready, ACP and UCP are not used or implied.
-- **Channel3** is not integrated unless a real API key and integration are added. The environment variable is reserved only.
+- **Channel3 is optional.** When `CHANNEL3_API_KEY` is set, a sixth MCP tool (`search_external_products`) queries the real Channel3 product graph. It is external retailer discovery only and is never mixed into the Shopify cart. Without a key the tool is not registered at all.
 - **No public admin auth.** `/api/shopify/sync`, `/api/dashboard` and the checkout return endpoint are reachable without a session in this demo. The MCP endpoint can be protected with `MCP_BEARER_TOKEN`. Add authentication before running a real merchant storefront.
 - **Automated coverage is narrow.** `scripts/verify.mjs` checks health and MCP discovery; `scripts/test-reservations.ts` checks the overselling invariant against Postgres. Shopify, PayPal and LLM calls are verified end-to-end manually because they need real credentials.
 

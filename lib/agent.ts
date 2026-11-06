@@ -1,4 +1,5 @@
 import { env } from "./env";
+import { isChannel3Configured, searchExternalProducts } from "./channel3";
 import {
   completeCheckout,
   createCart,
@@ -59,6 +60,10 @@ type ChatCompletionResponse = {
 const MAX_STEPS = 8;
 
 function systemPrompt(): string {
+  const external = isChannel3Configured()
+    ? `\n10. The merchant's own catalog may not have what the buyer wants. If search_products returns no matching products, you may call search_external_products to show real offers from other retailers via Channel3. Clearly label those results as external, show the retailer and price, and explain that they cannot be purchased through this store's cart. Never pass a Channel3 product ID to create_cart.`
+    : "";
+
   return `You are the buyer agent for Agent-Ready Store, an agentic commerce layer for a real Shopify store.
 
 Your job: help a human buyer find real products in the connected Shopify catalog, build a cart, and start a real PayPal order. You never invent products, prices, stock, variant IDs, discounts or delivery promises. Everything you state about the catalog must come from a tool result.
@@ -72,12 +77,21 @@ Rules:
 6. Do not call complete_checkout on your own. Only call it if the buyer explicitly says they already approved the payment and asks you to finalize, or if they ask for the status and the order is still pending.
 7. Use get_cart_status when the buyer asks about an existing cart or order.
 8. If a tool returns an error, explain it plainly and offer a next step. Never hide an error.
-9. Keep answers short and concrete. No marketing fluff.
+9. Keep answers short and concrete. No marketing fluff.${external}
 
 The store is ${env.shopifyShop}. Today is ${new Date().toISOString().slice(0, 10)}.`;
 }
 
-const TOOL_DEFINITIONS = [
+type ToolDefinition = {
+  type: "function";
+  function: {
+    name: string;
+    description: string;
+    parameters: Record<string, unknown>;
+  };
+};
+
+const CORE_TOOL_DEFINITIONS: ToolDefinition[] = [
   {
     type: "function" as const,
     function: {
@@ -217,6 +231,44 @@ const TOOL_DEFINITIONS = [
   },
 ];
 
+function toolDefinitions(): ToolDefinition[] {
+  const definitions: ToolDefinition[] = [...CORE_TOOL_DEFINITIONS];
+
+  if (isChannel3Configured()) {
+    definitions.push({
+      type: "function",
+      function: {
+        name: "search_external_products",
+        description:
+          "Search Channel3's real product graph for products that are NOT in this Shopify store. Returns external retailer offers with prices and buy links. These items cannot be added to a cart here.",
+        parameters: {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "What the buyer is looking for",
+            },
+            max_price_cents: {
+              type: "integer",
+              description: "Maximum offer price in cents",
+            },
+            limit: {
+              type: "integer",
+              minimum: 1,
+              maximum: 30,
+              default: 8,
+            },
+          },
+          required: ["query"],
+          additionalProperties: false,
+        },
+      },
+    });
+  }
+
+  return definitions;
+}
+
 async function callModel(
   messages: ChatMessage[],
 ): Promise<AssistantMessage> {
@@ -229,7 +281,7 @@ async function callModel(
     body: JSON.stringify({
       model: env.llmModel,
       messages,
-      tools: TOOL_DEFINITIONS,
+      tools: toolDefinitions(),
       tool_choice: "auto",
       temperature: 0.2,
       max_tokens: 1024,
@@ -323,6 +375,18 @@ async function executeTool(
       case "get_cart_status": {
         const output = await getCartStatus(String(input.cart_id ?? ""));
         await logAgentEvent(name, input, output, String(input.cart_id ?? ""));
+        return { ok: true, output };
+      }
+      case "search_external_products": {
+        const output = await searchExternalProducts({
+          query: String(input.query ?? ""),
+          maxPriceCents:
+            typeof input.max_price_cents === "number"
+              ? input.max_price_cents
+              : undefined,
+          limit: typeof input.limit === "number" ? input.limit : 8,
+        });
+        await logAgentEvent(name, input, output);
         return { ok: true, output };
       }
       case "complete_checkout": {
