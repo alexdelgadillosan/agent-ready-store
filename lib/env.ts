@@ -1,0 +1,57 @@
+export function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value || value.trim() === "") {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
+export const env = {
+  get shopifyShop() {
+    return requireEnv("SHOPIFY_SHOP")
+      .replace(/^https?:\/\//, "")
+      .replace(/\/$/, "");
+  },
+  get shopifyAccessToken() {
+    return requireEnv("SHOPIFY_ACCESS_TOKEN");
+  },
+  get shopifyApiVersion() {
+    return process.env.SHOPIFY_API_VERSION || "2026-10";
+  },
+  get shopifyWebhookSecret() {
+    return process.env.SHOPIFY_WEBHOOK_SECRET || "";
+  },
+  get paypalClientId() {
+    return requireEnv("PAYPAL_CLIENT_ID");
+  },
+  get paypalClientSecret() {
+    return requireEnv("PAYPAL_CLIENT_SECRET");
+  },
+  get paypalEnv(): "sandbox" | "live" {
+    return process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
+  },
+  get paypalWebhookId() {
+    return process.env.PAYPAL_WEBHOOK_ID || "";
+  },
+  get databaseUrl() {
+    return process.env.DATABASE_URL || "";
+  },
+  get llmBaseUrl() {
+    return (process.env.LLM_BASE_URL || "https://api.openai.com/v1").replace(
+      /\/$/,
+      "",
+    );
+  },
+  get llmApiKey() {
+    return requireEnv("LLM_API_KEY");
+  },
+  get llmModel() {
+    return process.env.LLM_MODEL || "gpt-4.1-mini";
+  },
+  get appUrl() {
+    return (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
+  },
+  get mcpBearerToken() {
+    return process.env.MCP_BEARER_TOKEN || "";
+  },
+};

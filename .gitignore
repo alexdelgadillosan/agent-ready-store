@@ -1,0 +1,8 @@
+node_modules
+.next
+.env
+.env.local
+drizzle/meta
+*.log
+.DS_Store
+*.tsbuildinfo
