@@ -28,7 +28,7 @@ No claims of integration with ChatGPT or Gemini. No early-access features. No mo
 |---|---|
 | Catalog, variants, prices, images | Shopify Admin GraphQL API (`2026-10`), cached in Postgres |
 | Inventory | Shopify `inventoryQuantity` + Postgres reservations with per-variant advisory locks |
-| Cart totals | Shopify `draftOrderCreate` (shipping and tax computed by Shopify) |
+| Cart totals | Shopify `draftOrderCreate` (subtotal and tax computed by Shopify; explicit free-shipping line) |
 | Order | Shopify `draftOrderComplete(paymentPending: false)` — a real order in the Shopify admin |
 | Payment | PayPal Orders v2 **sandbox**: create order → buyer approves → capture |
 | Buyer agent | OpenAI-compatible chat completions with real function/tool calling |
@@ -365,6 +365,7 @@ Set `PAYPAL_WEBHOOK_ID` and subscribe the sandbox app to `CHECKOUT.ORDER.APPROVE
 
 - **Single merchant.** The MVP uses one Shopify custom-app token. OAuth multi-merchant is deliberately out of scope; the token is still real.
 - **Sandbox payments.** Required by the hackathon. `PAYPAL_ENV=live` switches the same code to live PayPal, but live use requires compliance and real credentials.
+- **Free shipping in the demo.** The Draft Order carries an explicit free-shipping line. A store that charges shipping needs a rate-selection step before the PayPal order is created.
 - **Polling, not webhooks, for stock.** The dashboard reads the cached stock and active reservations; run a sync after external inventory changes. The optional PayPal webhook is implemented, Shopify webhooks are not.
 - **No early-access claims.** Store Sync, Agent Ready, ACP and UCP are not used or implied.
 - **Channel3** is not integrated unless a real API key and integration are added. The environment variable is reserved only.

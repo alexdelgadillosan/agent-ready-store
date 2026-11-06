@@ -32,7 +32,7 @@ No early access. No mocked catalog. No scripted payment result.
    - `get_cart_status`
    - `complete_checkout`
 3. **Inventory reservations** — `create_cart` takes `pg_advisory_xact_lock(hashtext(variant_id))`, validates available stock, and inserts a 10-minute reservation. Two agents cannot reserve the last unit.
-4. **Real cart totals** — a Shopify Draft Order is created for the requested variants and address. Shopify computes subtotal, tax and shipping. The PayPal order uses that exact total.
+4. **Real cart totals** — a Shopify Draft Order is created for the requested variants and address. Shopify computes subtotal and tax, and the demo store uses an explicit free-shipping line. The PayPal order uses that exact total.
 5. **Real payment** — PayPal Orders v2 create → buyer approval → capture, with `PayPal-Request-Id` idempotency.
 6. **Real order** — `draftOrderComplete(paymentPending: false)` creates the order in Shopify. The PayPal capture ID is stored and shown on the AG Grid dashboard.
 7. **Single finalizer** — a cart moves `open → processing → paid` atomically, so the return page and an optional webhook cannot double-capture.

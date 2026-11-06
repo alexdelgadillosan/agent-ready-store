@@ -124,6 +124,38 @@ export interface PayPalCapture {
   }>;
 }
 
+export async function getPayPalOrder(
+  paypalOrderId: string,
+): Promise<PayPalCapture> {
+  const token = await getAccessToken();
+
+  const response = await fetch(
+    `${PAYPAL_BASE}/v2/checkout/orders/${paypalOrderId}`,
+    {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    },
+  );
+
+  const json = (await response.json()) as PayPalCapture & {
+    message?: string;
+  };
+
+  if (!response.ok) {
+    throw new Error(
+      `PayPal get order failed: ${json.message ?? response.status}`,
+    );
+  }
+
+  return json;
+}
+
+type PayPalErrorResponse = {
+  message?: string;
+  details?: Array<{ issue?: string }>;
+};
+
 export async function capturePayPalOrder(
   paypalOrderId: string,
 ): Promise<PayPalCapture> {
@@ -143,30 +175,42 @@ export async function capturePayPalOrder(
     },
   );
 
-  const json = (await response.json()) as PayPalCapture & {
-    message?: string;
-    details?: unknown;
+  const json = (await response.json()) as PayPalErrorResponse & {
+    id?: string;
+    status?: string;
   };
 
   if (!response.ok) {
+    // A previous attempt may have captured the order but lost the response
+    // (timeout, crash, redeploy). Recover the existing capture instead of
+    // charging twice or leaving the buyer paid with no order.
+    const alreadyCaptured = json.details?.some(
+      (detail) => detail.issue === "ORDER_ALREADY_CAPTURED",
+    );
+
+    if (alreadyCaptured) {
+      const existing = await getPayPalOrder(paypalOrderId);
+      if (existing.status === "COMPLETED") {
+        return existing;
+      }
+    }
+
     throw new Error(
       `PayPal capture failed: ${json.message ?? response.status}`,
     );
   }
 
-  if (json.status !== "COMPLETED") {
-    throw new Error(`PayPal capture status is ${json.status}`);
+  const capture = json as PayPalCapture;
+
+  if (capture.status !== "COMPLETED") {
+    throw new Error(`PayPal capture status is ${capture.status}`);
   }
 
-  return json;
+  return capture;
 }
 
 export function getCaptureId(capture: PayPalCapture): string | null {
-  return (
-    capture.purchase_units?.[0]?.payments?.captures?.[0]?.id ??
-    capture.id ??
-    null
-  );
+  return capture.purchase_units?.[0]?.payments?.captures?.[0]?.id ?? null;
 }
 
 export async function verifyPayPalWebhook(

@@ -393,6 +393,11 @@ export async function createDraftOrder(
     note: "Created by Agent-Ready Store (AI agent via MCP)",
     tags: ["agent-ready", "mcp", "ai-agent"],
     customAttributes: [{ key: "source", value: "agent-ready-store" }],
+    // Draft orders created through the Admin API do not select a shipping
+    // rate on their own. The demo store ships free, so make that explicit
+    // instead of leaving shipping undefined. Change this line (or add rates)
+    // if the connected store charges shipping.
+    shippingLine: { title: "Free shipping", price: "0.00" },
   };
 
   if (buyer.name || buyer.address) {
