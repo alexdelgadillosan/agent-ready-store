@@ -13,7 +13,13 @@ export const env = {
       .replace(/\/$/, "");
   },
   get shopifyAccessToken() {
-    return requireEnv("SHOPIFY_ACCESS_TOKEN");
+    return process.env.SHOPIFY_ACCESS_TOKEN?.trim() || "";
+  },
+  get shopifyClientId() {
+    return process.env.SHOPIFY_CLIENT_ID?.trim() || "";
+  },
+  get shopifyClientSecret() {
+    return process.env.SHOPIFY_CLIENT_SECRET?.trim() || "";
   },
   get shopifyApiVersion() {
     return process.env.SHOPIFY_API_VERSION || "2026-10";

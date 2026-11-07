@@ -8,7 +8,8 @@ export async function GET() {
   const checks = {
     shopify: Boolean(
       process.env.SHOPIFY_SHOP?.trim() &&
-        process.env.SHOPIFY_ACCESS_TOKEN?.trim(),
+      (process.env.SHOPIFY_ACCESS_TOKEN?.trim() ||
+        (process.env.SHOPIFY_CLIENT_ID?.trim() && process.env.SHOPIFY_CLIENT_SECRET?.trim())),
     ),
     paypal: Boolean(
       process.env.PAYPAL_CLIENT_ID?.trim() &&

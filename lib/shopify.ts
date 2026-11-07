@@ -8,6 +8,38 @@ type GraphQLResponse<T> = {
   errors?: Array<{ message: string }>;
 };
 
+let clientCredentialsToken: { value: string; expiresAt: number } | null = null;
+
+async function getShopifyAccessToken(): Promise<string> {
+  if (env.shopifyAccessToken) return env.shopifyAccessToken;
+  if (!env.shopifyClientId || !env.shopifyClientSecret) {
+    throw new Error("Set SHOPIFY_ACCESS_TOKEN or SHOPIFY_CLIENT_ID and SHOPIFY_CLIENT_SECRET");
+  }
+  if (clientCredentialsToken && clientCredentialsToken.expiresAt > Date.now() + 60_000) {
+    return clientCredentialsToken.value;
+  }
+
+  const response = await fetch(`https://${env.shopifyShop}/admin/oauth/access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: env.shopifyClientId,
+      client_secret: env.shopifyClientSecret,
+    }),
+    cache: "no-store",
+  });
+  const json = (await response.json()) as { access_token?: string; expires_in?: number; error?: string };
+  if (!response.ok || !json.access_token) {
+    throw new Error(`Shopify token error: ${json.error ?? response.status}`);
+  }
+  clientCredentialsToken = {
+    value: json.access_token,
+    expiresAt: Date.now() + (json.expires_in ?? 86400) * 1000,
+  };
+  return json.access_token;
+}
+
 async function shopifyGraphQL<T>(
   query: string,
   variables?: Record<string, unknown>,
@@ -17,7 +49,7 @@ async function shopifyGraphQL<T>(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Access-Token": env.shopifyAccessToken,
+      "X-Shopify-Access-Token": await getShopifyAccessToken(),
     },
     body: JSON.stringify({ query, variables }),
     cache: "no-store",
@@ -101,6 +133,7 @@ const CATALOG_QUERY = /* GraphQL */ `
 
 export async function getMerchant(): Promise<Merchant> {
   const shopDomain = env.shopifyShop;
+  const accessToken = await getShopifyAccessToken();
   const [existing] = await db
     .select()
     .from(merchants)
@@ -108,19 +141,19 @@ export async function getMerchant(): Promise<Merchant> {
     .limit(1);
 
   if (existing) {
-    if (existing.accessToken !== env.shopifyAccessToken) {
+    if (existing.accessToken !== accessToken) {
       await db
         .update(merchants)
-        .set({ accessToken: env.shopifyAccessToken })
+        .set({ accessToken })
         .where(eq(merchants.id, existing.id));
-      return { ...existing, accessToken: env.shopifyAccessToken };
+      return { ...existing, accessToken };
     }
     return existing;
   }
 
   const [created] = await db
     .insert(merchants)
-    .values({ shopDomain, accessToken: env.shopifyAccessToken })
+    .values({ shopDomain, accessToken })
     .returning();
 
   if (!created) {
