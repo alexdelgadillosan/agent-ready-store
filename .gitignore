@@ -6,3 +6,4 @@ drizzle/meta
 *.log
 .DS_Store
 *.tsbuildinfo
+.agents/

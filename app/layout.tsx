@@ -3,9 +3,9 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Agent-Ready Store",
+  title: "AgentCart · Commerce for AI buyers",
   description:
-    "Real MCP commerce for Shopify: a real LLM buyer, real inventory reservations, and real PayPal sandbox checkout.",
+    "AgentCart connects Shopify inventory to real AI buyers and PayPal checkout.",
 };
 
 export default function RootLayout({
@@ -17,13 +17,12 @@ export default function RootLayout({
         <header className="site-header">
           <div className="shell site-header-inner">
             <Link href="/" className="brand">
-              <span className="brand-mark" aria-hidden="true" />
-              <span>Agent-Ready Store</span>
+              <span className="brand-mark" aria-hidden="true"><span /></span>
+              <span>Agent<span className="brand-accent">Cart</span></span>
             </Link>
             <nav className="nav">
-              <Link href="/chat">Buyer agent</Link>
-              <Link href="/dashboard">Merchant dashboard</Link>
-              <Link href="/api/health">Health</Link>
+              <Link href="/chat">Shop with AI</Link>
+              <Link href="/dashboard">Merchant view</Link>
               <a
                 href="https://modelcontextprotocol.io"
                 target="_blank"
@@ -38,7 +37,7 @@ export default function RootLayout({
         <footer className="footer">
           <div className="shell footer-inner">
             <span>
-              Agent-Ready Store · Shopify Admin API + MCP + PayPal Orders v2
+               AgentCart · Shopify Admin API + MCP + PayPal Orders v2
             </span>
             <span>
               No mocks. No simulated catalog. Sandbox payments only.

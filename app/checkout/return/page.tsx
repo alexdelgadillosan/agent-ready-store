@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import CheckoutReturn from "@/components/CheckoutReturn";
 
 export const metadata = {
-  title: "Checkout · Agent-Ready Store",
+  title: "Checkout · AgentCart",
 };
 
 export default function CheckoutReturnPage() {

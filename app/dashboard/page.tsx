@@ -1,7 +1,7 @@
 import Dashboard from "@/components/Dashboard";
 
 export const metadata = {
-  title: "Merchant dashboard · Agent-Ready Store",
+  title: "Merchant dashboard · AgentCart",
 };
 
 export default function DashboardPage() {

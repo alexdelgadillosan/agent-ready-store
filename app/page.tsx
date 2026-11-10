@@ -4,45 +4,45 @@ import SyncButton from "@/components/SyncButton";
 const FEATURES = [
   {
     icon: "◈",
-    title: "Real Shopify catalog",
-    body: "Products, variants, prices, images and stock come from the Shopify Admin GraphQL API and are cached in Postgres. Nothing is seeded or hardcoded.",
+    title: "Your live Shopify catalog",
+    body: "Products, variants, prices and stock come directly from Shopify. AgentCart never invents a product or a variant.",
   },
   {
     icon: "◎",
-    title: "Real MCP server",
-    body: "Five core tools are served over Streamable HTTP at /api/mcp. Any MCP client can discover the catalog, reserve stock, create a cart and capture payment. A sixth Channel3 discovery tool appears only when a real API key is configured.",
+    title: "An agent-native storefront",
+    body: "Any MCP client can discover products, reserve stock and create a cart through a clean, inspectable tool contract.",
   },
   {
     icon: "◇",
-    title: "Real PayPal checkout",
-    body: "Orders v2 creates and captures a sandbox payment with idempotency keys. A real Shopify Draft Order is completed with paymentPending=false.",
+    title: "A checkout you can trust",
+    body: "PayPal Orders v2 handles approval and capture. Shopify completes the Draft Order only after payment is confirmed.",
   },
   {
     icon: "◉",
-    title: "No overselling",
-    body: "Reservations run inside a Postgres transaction with an advisory lock per variant and a 10-minute TTL. Available stock subtracts active holds.",
+    title: "Stock stays honest",
+    body: "Postgres reservations and advisory locks protect inventory while a buyer finishes checkout. Holds last 30 minutes.",
   },
 ];
 
 const STEPS = [
   {
-    title: "Connect a Shopify store",
+      title: "Connect your store",
     body: "A custom app token is stored server-side. POST /api/shopify/sync pulls the active catalog and current inventory into Postgres.",
   },
   {
-    title: "The agent discovers products",
+      title: "Let the buyer browse",
     body: "The built-in LLM agent (or any external MCP client) calls search_products and get_product. It never invents a variant ID.",
   },
   {
-    title: "Inventory is reserved, totals are real",
+      title: "Hold stock, calculate the real total",
     body: "create_cart takes an advisory lock, inserts a TTL reservation, creates a Shopify Draft Order and asks Shopify to calculate shipping and tax.",
   },
   {
-    title: "The buyer approves PayPal",
+      title: "The buyer approves payment",
     body: "A real PayPal Orders v2 order is created for the Shopify-calculated total. The buyer signs in to a sandbox account and approves it.",
   },
   {
-    title: "Payment capture becomes a Shopify order",
+      title: "Payment becomes a Shopify order",
     body: "complete_checkout captures the PayPal payment and calls draftOrderComplete. The order appears in Shopify admin and on the AG Grid dashboard.",
   },
 ];
@@ -51,24 +51,23 @@ export default function HomePage() {
   return (
     <div className="shell page">
       <section className="hero">
-        <span className="eyebrow">PayPal AI Hackathon 2026 · Agentic Commerce</span>
+        <span className="eyebrow"><i className="eyebrow-dot" /> LIVE COMMERCE INFRASTRUCTURE</span>
         <h1>
-          Your Shopify store,
+          Let AI buy
           <br />
-          <span className="grad">ready for AI buyers.</span>
+          <span className="grad">with confidence.</span>
         </h1>
         <p className="lead">
-          Agent-Ready Store gives any Shopify merchant a real MCP endpoint, a
-          real LLM buyer and real PayPal checkout — with live inventory, draft
-          orders and payment capture. No early access, no mocked catalog, no
-          scripted demo.
+          AgentCart turns a Shopify catalog into a storefront that AI agents can
+          actually use. Live inventory, clear product decisions and a real
+          PayPal checkout — no mock data, no scripted path.
         </p>
         <div className="actions">
           <Link href="/chat" className="btn btn-primary">
-            Talk to the buyer agent →
+            Try the buyer agent →
           </Link>
           <Link href="/dashboard" className="btn btn-ghost">
-            Open merchant dashboard
+            View the merchant side
           </Link>
           <SyncButton />
         </div>
@@ -77,13 +76,14 @@ export default function HomePage() {
       <section className="section">
         <div className="section-head">
           <div>
-            <h2>Everything is wired to a live system</h2>
+            <span className="section-kicker">01 / THE PROMISE</span>
+            <h2>Simple on the surface. Real underneath.</h2>
             <p>
-              If a dependency is unavailable, the feature is cut. It is never
-              replaced by fake data.
+              Every claim below is backed by a live integration. If a dependency
+              is unavailable, AgentCart says so — it never fills the gap with fake data.
             </p>
           </div>
-          <span className="tag tag-green">Zero simulation</span>
+          <span className="tag tag-green">Built for trust</span>
         </div>
         <div className="grid grid-4">
           {FEATURES.map((feature) => (
@@ -101,7 +101,8 @@ export default function HomePage() {
       <section className="section">
         <div className="section-head">
           <div>
-            <h2>How a purchase actually happens</h2>
+            <span className="section-kicker">02 / THE FLOW</span>
+            <h2>From intent to order in five honest steps.</h2>
             <p>
               Every step below hits Shopify, PayPal or Postgres. The agent can
               only act through the MCP tools.
@@ -124,7 +125,7 @@ export default function HomePage() {
       <section className="section">
         <div className="grid grid-2">
           <div className="callout">
-            <h3>What “real” means here</h3>
+            <h3>Trust is a product feature</h3>
             <p>
               The catalog, stock, draft orders and personal data live in a real
               Shopify development store. Payments are real Orders v2 API calls
@@ -134,7 +135,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="card">
-            <h3>Connect an external agent</h3>
+            <h3>Bring your own agent</h3>
             <p className="small">
               Point any Streamable HTTP MCP client at:
             </p>

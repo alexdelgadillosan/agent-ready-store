@@ -1,16 +1,17 @@
 import Chat from "@/components/Chat";
 
 export const metadata = {
-  title: "Buyer agent · Agent-Ready Store",
+  title: "Shop with AI · AgentCart",
 };
 
 export default function ChatPage() {
   return (
     <div className="shell page">
       <div className="page-head">
-        <h1>Buyer agent</h1>
+          <span className="section-kicker">AGENTCART / SHOPPING</span>
+          <h1>Tell us what you need.</h1>
         <p>
-          A real LLM with tool calling against the connected store. Ask for a
+          A real AI buyer with live Shopify tools. Ask for a
           product, give a shipping address, and approve the PayPal sandbox
           payment. Every tool call is visible on the right.
         </p>

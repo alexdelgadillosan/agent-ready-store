@@ -31,7 +31,7 @@ type AgentResponse = {
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Hi — I'm the buyer agent for this Shopify store. I can search the real catalog, check live stock, build a cart and start a PayPal checkout. What are you looking for?",
+    "Hi — I’m AgentCart’s buyer agent. I can search the live catalog, check stock, build a cart and start PayPal checkout. What are you looking for?",
 };
 
 const SAMPLES = [
@@ -149,7 +149,7 @@ export default function Chat() {
                 </span>
               </div>
               <p className="small" style={{ margin: "8px 0 12px" }}>
-                Inventory is reserved for 10 minutes and a Shopify Draft Order
+                Inventory is reserved for 30 minutes and a Shopify Draft Order
                 exists. Approve the payment in the PayPal sandbox to capture it
                 and create the real Shopify order.
               </p>
@@ -235,7 +235,7 @@ export default function Chat() {
         <div className="card">
           <h3>Hard limits</h3>
           <p className="small">
-            Max 10 units per variant, max $500 per cart, 10-minute reservation
+             Max 10 units per variant, max $500 per cart, 30-minute reservation
             TTL, and one capture per PayPal order. The agent cannot bypass these;
             they are enforced server-side.
           </p>
