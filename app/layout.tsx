@@ -39,10 +39,14 @@ export default function RootLayout({
         <footer className="footer">
           <div className="shell footer-inner">
             <span>
-               AgentCart · Shopify Admin API + MCP + PayPal Orders v2
-            </span>
-            <span>
-              No mocks. No simulated catalog. Sandbox payments only.
+              Made with <span aria-label="love">♥</span> by{" "}
+              <a
+                href="https://alexdelgadillo.dev"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Alex Delgadillo
+              </a>
             </span>
           </div>
         </footer>
