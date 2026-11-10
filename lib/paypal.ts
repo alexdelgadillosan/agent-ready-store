@@ -71,7 +71,7 @@ export async function createPayPalOrder(params: {
       purchase_units: [
         {
           reference_id: params.cartId,
-          description: "Agent-Ready Store order",
+          description: "OmniBuy AI verified purchase",
           amount: {
             currency_code: params.currency,
             value: params.amount,
@@ -79,7 +79,7 @@ export async function createPayPalOrder(params: {
         },
       ],
       application_context: {
-        brand_name: "Agent-Ready Store",
+          brand_name: "OmniBuy AI",
         user_action: "PAY_NOW",
         shipping_preference: "NO_SHIPPING",
         return_url: `${env.appUrl}/checkout/return?cart_id=${params.cartId}`,

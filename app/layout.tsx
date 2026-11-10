@@ -4,9 +4,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AgentCart · Commerce for AI buyers",
+  title: "OmniBuy AI · Verified Autonomous Commerce",
   description:
-    "AgentCart connects Shopify inventory to real AI buyers and PayPal checkout.",
+    "OmniBuy AI finds, verifies and purchases real products within the buyer's rules.",
 };
 
 export default function RootLayout({
@@ -19,10 +19,10 @@ export default function RootLayout({
           <div className="shell site-header-inner">
             <Link href="/" className="brand">
               <span className="brand-mark" aria-hidden="true"><span /></span>
-              <span>Agent<span className="brand-accent">Cart</span></span>
+              <span>Omni<span className="brand-accent">Buy</span> <small>AI</small></span>
             </Link>
             <nav className="nav">
-              <Link href="/chat">Shop with AI</Link>
+              <Link href="/chat">Start a purchase</Link>
               <Link href="/dashboard">Merchant view</Link>
               <ThemeToggle />
               <a
@@ -30,7 +30,7 @@ export default function RootLayout({
                 target="_blank"
                 rel="noreferrer"
               >
-                MCP ↗
+                API / MCP ↗
               </a>
             </nav>
           </div>

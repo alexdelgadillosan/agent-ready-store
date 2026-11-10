@@ -31,13 +31,13 @@ type AgentResponse = {
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Hi — I’m AgentCart’s buyer agent. I can search the live catalog, check stock, build a cart and start PayPal checkout. What are you looking for?",
+    "Hi — I’m OmniBuy AI. Tell me what you need, your budget and any constraints. I’ll compare real products, create a Decision Proof, and ask for approval before checkout.",
 };
 
 const SAMPLES = [
-  "What products do you have?",
-  "Show me something under $30",
-  "I need a gift for a coffee lover",
+  "Equip a two-person office under $900 USD",
+  "Find the best value option under $100 USD",
+  "I need a gift for someone who loves coffee",
 ];
 
 function renderWithLinks(text: string) {
@@ -116,9 +116,9 @@ export default function Chat() {
       <section className="card chat-panel">
         <div className="chat-head">
           <div>
-            <strong>Buyer agent</strong>
+            <strong>OmniBuy decision agent</strong>
             <div>
-              <span>LLM tool calling · real Shopify catalog · PayPal sandbox</span>
+              <span>Live catalog · constraint verification · PayPal sandbox</span>
             </div>
           </div>
           <span className={`tag ${loading ? "tag-blue" : "tag-green"}`}>
@@ -233,11 +233,11 @@ export default function Chat() {
         </div>
 
         <div className="card">
-          <h3>Hard limits</h3>
+          <h3>Verification rules</h3>
           <p className="small">
-             Max 10 units per variant, max $500 per cart, 30-minute reservation
-            TTL, and one capture per PayPal order. The agent cannot bypass these;
-            they are enforced server-side.
+             Budget limits, stock checks, quantity limits, 30-minute reservations
+             and one PayPal capture are enforced server-side. The agent cannot
+             bypass them.
           </p>
         </div>
 

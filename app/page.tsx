@@ -5,17 +5,17 @@ const FEATURES = [
   {
     icon: "◈",
     title: "Your live Shopify catalog",
-    body: "Products, variants, prices and stock come directly from Shopify. AgentCart never invents a product or a variant.",
+    body: "Products, variants, prices and stock come directly from Shopify. OmniBuy never invents a product or a variant.",
   },
   {
     icon: "◎",
-    title: "An agent-native storefront",
-    body: "Any MCP client can discover products, reserve stock and create a cart through a clean, inspectable tool contract.",
+    title: "A verified buying plan",
+    body: "OmniBuy turns intent, budget and preferences into a plan with explicit constraints and an auditable decision trail.",
   },
   {
     icon: "◇",
-    title: "A checkout you can trust",
-    body: "PayPal Orders v2 handles approval and capture. Shopify completes the Draft Order only after payment is confirmed.",
+    title: "A checkout you approve",
+    body: "A Decision Proof appears before spending. PayPal handles approval and Shopify completes the order only after payment is confirmed.",
   },
   {
     icon: "◉",
@@ -53,18 +53,17 @@ export default function HomePage() {
       <section className="hero">
         <span className="eyebrow"><i className="eyebrow-dot" /> LIVE COMMERCE INFRASTRUCTURE</span>
         <h1>
-          Let AI buy
+          Let AI decide
           <br />
-          <span className="grad">with confidence.</span>
+          <span className="grad">with proof.</span>
         </h1>
         <p className="lead">
-          AgentCart turns a Shopify catalog into a storefront that AI agents can
-          actually use. Live inventory, clear product decisions and a real
-          PayPal checkout — no mock data, no scripted path.
+          OmniBuy finds the best combination of real products, proves that it
+          satisfies your rules, and only spends money after you approve the plan.
         </p>
         <div className="actions">
           <Link href="/chat" className="btn btn-primary">
-            Try the buyer agent →
+            Build a verified plan →
           </Link>
           <Link href="/dashboard" className="btn btn-ghost">
             View the merchant side
@@ -77,10 +76,10 @@ export default function HomePage() {
         <div className="section-head">
           <div>
             <span className="section-kicker">01 / THE PROMISE</span>
-            <h2>Simple on the surface. Real underneath.</h2>
+            <h2>Simple on the surface. Verified underneath.</h2>
             <p>
               Every claim below is backed by a live integration. If a dependency
-              is unavailable, AgentCart says so — it never fills the gap with fake data.
+               is unavailable, OmniBuy says so — it never fills the gap with fake data.
             </p>
           </div>
           <span className="tag tag-green">Built for trust</span>

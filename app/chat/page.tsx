@@ -1,19 +1,19 @@
 import Chat from "@/components/Chat";
 
 export const metadata = {
-  title: "Shop with AI · AgentCart",
+  title: "Plan a verified purchase · OmniBuy AI",
 };
 
 export default function ChatPage() {
   return (
     <div className="shell page">
       <div className="page-head">
-          <span className="section-kicker">AGENTCART / SHOPPING</span>
-          <h1>Tell us what you need.</h1>
+          <span className="section-kicker">OMNIBUY AI / VERIFIED PURCHASE</span>
+          <h1>Describe the purchase. We’ll prove the decision.</h1>
         <p>
-          A real AI buyer with live Shopify tools. Ask for a
-          product, give a shipping address, and approve the PayPal sandbox
-          payment. Every tool call is visible on the right.
+          Give OmniBuy your need, budget and constraints. It searches the live
+          catalog, verifies the plan, explains the trade-offs and asks for your
+          approval before PayPal checkout. Every tool call is visible on the right.
         </p>
       </div>
       <Chat />

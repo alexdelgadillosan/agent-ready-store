@@ -40,7 +40,7 @@ function errorResult(error: unknown) {
 }
 
 /**
- * Registers every Agent-Ready Store tool on an MCP server.
+ * Registers every OmniBuy AI tool on an MCP server.
  *
  * These are the same functions the built-in chat agent calls, so an external
  * MCP client (Claude, ChatGPT connectors, a custom agent) and the demo agent

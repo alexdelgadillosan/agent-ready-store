@@ -1,4 +1,5 @@
 import { and, eq, notInArray, sql } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
 import { db } from "./db";
 import { env } from "./env";
 import { merchants, products, variants, type Merchant } from "./schema";
@@ -418,9 +419,9 @@ export async function createDraftOrder(
       quantity: item.quantity,
     })),
     email: buyer.email,
-    note: "Created by Agent-Ready Store (AI agent via MCP)",
+    note: "Created by OmniBuy AI (verified purchase via MCP)",
     tags: ["agent-ready", "mcp", "ai-agent"],
-    customAttributes: [{ key: "source", value: "agent-ready-store" }],
+    customAttributes: [{ key: "source", value: "omnibuy-ai" }],
     // Draft orders created through the Admin API do not select a shipping
     // rate on their own. The demo store ships free, so make that explicit
     // instead of leaving shipping undefined. Change this line (or add rates)
@@ -590,8 +591,8 @@ const LOCATIONS_QUERY = /* GraphQL */ `
 `;
 
 const INVENTORY_SET = /* GraphQL */ `
-  mutation InventorySet($input: InventorySetQuantitiesInput!) {
-    inventorySetQuantities(input: $input) {
+  mutation InventorySet($input: InventorySetQuantitiesInput!, $idempotencyKey: String!) {
+    inventorySetQuantities(input: $input) @idempotent(key: $idempotencyKey) {
       userErrors { field message }
     }
   }
@@ -630,7 +631,7 @@ export async function publishCatalogProduct(input: {
     productId,
     variants: input.variants.map((variant) => ({
       price: variant.price.toFixed(2),
-      sku: variant.sku,
+      inventoryItem: { sku: variant.sku },
       optionValues: [{ optionName: "Title", name: variant.title || "Default Title" }],
     })),
   });
@@ -646,9 +647,11 @@ export async function publishCatalogProduct(input: {
     inventoryItemId: variant.inventoryItem.id,
     locationId,
     quantity: input.variants[index].inventory,
+    changeFromQuantity: 0,
   }));
   const inventory = await shopifyGraphQL<{ inventorySetQuantities: { userErrors: Array<{ message: string }> } }>(INVENTORY_SET, {
-    input: { name: "available", reason: "correction", ignoreCompareQuantity: true, quantities },
+    input: { name: "available", reason: "correction", quantities },
+    idempotencyKey: randomUUID(),
   });
   assertNoUserErrors(inventory.inventorySetQuantities.userErrors.map((error) => ({ field: null, message: error.message })), "Shopify inventorySetQuantities");
   return { productId, variants: saved.map((variant, index) => ({ sku: input.variants[index].sku, id: variant.id, inventoryItemId: variant.inventoryItem.id })) };

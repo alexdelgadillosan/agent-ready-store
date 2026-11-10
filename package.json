@@ -19,6 +19,7 @@
     "test:catalog-hub": "node --import tsx scripts/test-catalog-hub.ts",
     "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts",
     "test:fx": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-fx.ts"
+    ,"catalog:fetch:gymshark": "node scripts/fetch-gymshark-catalog.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.4.0",

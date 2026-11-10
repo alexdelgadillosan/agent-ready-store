@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import CheckoutReturn from "@/components/CheckoutReturn";
 
 export const metadata = {
-  title: "Checkout · AgentCart",
+  title: "Checkout · OmniBuy AI",
 };
 
 export default function CheckoutReturnPage() {

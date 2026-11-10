@@ -1,7 +1,7 @@
 import Dashboard from "@/components/Dashboard";
 
 export const metadata = {
-  title: "Merchant dashboard · AgentCart",
+  title: "Operations dashboard · OmniBuy AI",
 };
 
 export default function DashboardPage() {
