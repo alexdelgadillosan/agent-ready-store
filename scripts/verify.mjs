@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Verifies that a running Agent-Ready Store instance is reachable and that the
+ * Verifies that a running OmniBuy AI instance is reachable and that the
  * MCP endpoint exposes the expected tools.
  *
  * Usage:
@@ -50,7 +50,7 @@ async function mcp(method, params, id) {
 }
 
 async function main() {
-  console.log(`Agent-Ready Store verification → ${baseUrl}`);
+  console.log(`OmniBuy AI verification → ${baseUrl}`);
 
   try {
     const response = await fetch(`${baseUrl}/api/health`);
@@ -71,7 +71,7 @@ async function main() {
       {
         protocolVersion: "2025-06-18",
         capabilities: {},
-        clientInfo: { name: "agent-ready-store-verify", version: "1.0.0" },
+        clientInfo: { name: "omnibuy-ai-verify", version: "1.0.0" },
       },
       1,
     );

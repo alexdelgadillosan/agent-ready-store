@@ -1,8 +1,8 @@
 {
-  "name": "agent-ready-store",
+  "name": "omnibuy-ai",
   "version": "1.0.0",
   "private": true,
-  "description": "Agent-ready commerce for Shopify: a real MCP server, a real LLM buyer, and real PayPal sandbox checkout.",
+  "description": "Verified autonomous commerce: real Shopify products, explainable decisions and PayPal Sandbox checkout.",
   "engines": {
     "node": ">=20"
   },
@@ -18,8 +18,8 @@
     "validate:catalog-hub": "node scripts/validate-catalog-hub.mjs",
     "test:catalog-hub": "node --import tsx scripts/test-catalog-hub.ts",
     "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts",
-    "test:fx": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-fx.ts"
-    ,"catalog:fetch:gymshark": "node scripts/fetch-gymshark-catalog.mjs"
+    "test:fx": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-fx.ts",
+    "catalog:fetch:gymshark": "node scripts/fetch-gymshark-catalog.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.4.0",

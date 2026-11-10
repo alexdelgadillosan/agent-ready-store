@@ -14,7 +14,7 @@ type AgentStep = {
   ok: boolean;
 };
 
-type AgentCart = {
+type OmniBuyCart = {
   cart_id: string;
   approval_url: string;
   total_cents: number;
@@ -24,7 +24,7 @@ type AgentCart = {
 type AgentResponse = {
   reply?: string;
   steps?: AgentStep[];
-  cart?: AgentCart | null;
+  cart?: OmniBuyCart | null;
   error?: string;
 };
 
@@ -59,7 +59,7 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [steps, setSteps] = useState<AgentStep[]>([]);
-  const [cart, setCart] = useState<AgentCart | null>(null);
+  const [cart, setCart] = useState<OmniBuyCart | null>(null);
 
   async function send(text: string) {
     const trimmed = text.trim();

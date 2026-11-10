@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: agent-ready-store
+    name: omnibuy-ai
     runtime: node
     plan: starter
     buildCommand: npm install && npm run build
@@ -11,7 +11,7 @@ services:
         value: "22"
       - key: DATABASE_URL
         fromDatabase:
-          name: agent-ready-store-db
+          name: omnibuy-ai-db
           property: connectionString
       - key: APP_URL
         sync: false
@@ -46,10 +46,10 @@ services:
       - key: FX_CACHE_TTL_SECONDS
         value: "900"
       - key: FX_BASE_CURRENCY
-        value: EUR
+         value: USD
 
 databases:
-  - name: agent-ready-store-db
+  - name: omnibuy-ai-db
     plan: free
-    databaseName: agent_ready_store
-    user: agent_ready_store
+    databaseName: omnibuy_ai
+    user: omnibuy_ai

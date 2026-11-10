@@ -1,4 +1,4 @@
-# AgentCart
+# OmniBuy AI
 
 **Real agentic commerce for Shopify.** A public MCP server, a real LLM buyer, real inventory reservations, real Shopify Draft Orders and real PayPal Orders v2 checkout — with a merchant dashboard built on AG Grid.
 
@@ -10,7 +10,7 @@
 
 AI agents can research products, but they still cannot reliably buy from an ordinary Shopify store. Scraping a storefront is brittle, and handing checkout back to a human breaks the workflow. The big platforms are shipping their own closed agentic checkout; independent merchants are left out.
 
-Agent-Ready Store gives any Shopify merchant the missing layer **today**, without waiting for Store Sync, ACP, UCP or any early-access program:
+OmniBuy AI gives any Shopify merchant a verified autonomous commerce layer **today**, without waiting for Store Sync, ACP, UCP or any early-access program:
 
 - a standards-based **MCP endpoint** that any agent can call,
 - **atomic inventory reservations** so agents cannot oversell,
@@ -56,7 +56,7 @@ supports any brand once its authorized CSV/JSON feed is available.
 
 The intended Shopify store currency is **USD**. Set the store's base currency in
 Shopify Admin before production use; the Admin API flow does not silently change
-that store setting. AgentCart's Frankfurter/BCE rates are dated display/reference
+that store setting. OmniBuy AI's Frankfurter/BCE rates are dated display/reference
 quotes only. Shopify remains the source of truth for Draft Order totals and PayPal
 is charged only with the amount and currency returned by Shopify.
 
@@ -199,8 +199,8 @@ Any provider with an OpenAI-compatible chat completions API and tool calling wor
 ## Setup
 
 ```bash
-git clone <your-repo-url> agent-ready-store
-cd agent-ready-store
+git clone <your-repo-url> omnibuy-ai
+cd omnibuy-ai
 npm install
 cp .env.example .env.local
 ```

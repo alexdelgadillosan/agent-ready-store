@@ -1,13 +1,13 @@
 import { createMcpHandler } from "mcp-handler";
-import { registerAgentReadyTools } from "@/lib/mcp";
+import { registerOmniBuyTools } from "@/lib/mcp";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const handler = createMcpHandler(registerAgentReadyTools, {
+const handler = createMcpHandler(registerOmniBuyTools, {
   serverInfo: {
-    name: "agent-ready-store",
+    name: "omnibuy-ai",
     version: "1.0.0",
   },
 });
@@ -33,7 +33,7 @@ function guard(request: Request): Response | null {
       status: 401,
       headers: {
         "Content-Type": "application/json",
-        "WWW-Authenticate": 'Bearer realm="agent-ready-store"',
+        "WWW-Authenticate": 'Bearer realm="omnibuy-ai"',
       },
     },
   );

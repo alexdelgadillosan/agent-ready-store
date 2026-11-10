@@ -1,6 +1,6 @@
 # Devpost submission draft
 
-**Project:** Agent-Ready Store
+**Project:** OmniBuy AI
 **Track:** Agentic Commerce
 **Repo:** [GitHub URL]
 **Demo:** [Render URL]
@@ -18,7 +18,7 @@ AI agents can research products, but they still cannot buy from an ordinary Shop
 
 ## The solution
 
-Agent-Ready Store connects a Shopify store to an MCP endpoint that any agent can use. The agent searches a real catalog, sees live available stock, reserves inventory atomically, creates a real Shopify Draft Order with Shopify-calculated totals, and starts a real PayPal Orders v2 checkout. When the buyer approves, the payment is captured and the draft order becomes a real order in Shopify admin.
+OmniBuy AI connects a Shopify store to a verified autonomous commerce agent. It searches a real catalog, compares candidates against the buyer's budget and constraints, produces a Decision Proof, reserves inventory atomically, creates a real Shopify Draft Order with Shopify-calculated totals, and starts a real PayPal Orders v2 checkout only after approval. When the buyer approves, the payment is captured and the draft order becomes a real order in Shopify admin.
 
 No early access. No mocked catalog. No scripted payment result.
 

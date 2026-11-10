@@ -5,7 +5,7 @@ Rules: one continuous real run, no acting, human voice, show the Shopify admin a
 | Time | Shot | Voice-over |
 |---|---|---|
 | 0:00–0:15 | Landing page | “AI agents can research products, but they still can’t buy from an ordinary Shopify store. Scraping is brittle, and handing checkout back to a human defeats the point.” |
-| 0:15–0:30 | Architecture section / README | “Agent-Ready Store gives any Shopify merchant a real MCP endpoint, real inventory reservations and real PayPal checkout — no early access, no mocks.” |
+| 0:15–0:30 | Architecture section / README | “OmniBuy AI gives any Shopify merchant verified autonomous commerce: real products, real inventory reservations and real PayPal checkout — no mocks.” |
 | 0:30–0:45 | Shopify admin product list, then click **Sync Shopify catalog** | “This is a live Shopify development store. One sync pulls the real catalog, variants, prices and stock into Postgres.” |
 | 0:45–1:05 | `/chat`, type “What products do you have?” | “Here is the buyer agent. It’s a real LLM using tool calling. It has no hardcoded catalog; it must call `search_products`.” |
 | 1:05–1:20 | Open **Tool trace**, show `search_products` result | “The trace shows the actual MCP tool call and the real Shopify variants and stock that came back.” |
@@ -15,7 +15,7 @@ Rules: one continuous real run, no acting, human voice, show the Shopify admin a
 | 2:15–2:30 | Return page with capture ID and Shopify order name | “The return page captures the payment and calls `draftOrderComplete`. One cart, one finalizer, idempotent capture.” |
 | 2:30–2:45 | Shopify admin order detail | “Here is the real order in Shopify admin, with the same total and the agent tag. This is the part a mocked demo never shows.” |
 | 2:45–2:58 | `/dashboard` AG Grid | “The dashboard reads Postgres: captured revenue, the PayPal capture ID, live availability and every agent tool call.” |
-| 2:58–3:00 | Landing page | “Agent-Ready Store: real products, real stock, real PayPal. Works today.” |
+| 2:58–3:00 | Landing page | “OmniBuy AI: it proves the purchase before spending your money.” |
 
 ## Recording checklist
 

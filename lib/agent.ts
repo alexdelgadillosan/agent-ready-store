@@ -20,7 +20,7 @@ export type AgentStep = {
   ok: boolean;
 };
 
-export type AgentCart = {
+export type OmniBuyCart = {
   cart_id: string;
   approval_url: string;
   total_cents: number;
@@ -365,7 +365,7 @@ async function executeTool(
 export async function runAgent(history: AgentTurn[]): Promise<{
   reply: string;
   steps: AgentStep[];
-  cart: AgentCart | null;
+  cart: OmniBuyCart | null;
 }> {
   const messages: ChatMessage[] = [
     { role: "system", content: systemPrompt() },
@@ -376,7 +376,7 @@ export async function runAgent(history: AgentTurn[]): Promise<{
   ];
 
   const steps: AgentStep[] = [];
-  let cart: AgentCart | null = null;
+  let cart: OmniBuyCart | null = null;
 
   for (let step = 0; step < MAX_STEPS; step += 1) {
     const message = await callModel(messages);

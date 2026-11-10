@@ -46,7 +46,7 @@ function errorResult(error: unknown) {
  * MCP client (Claude, ChatGPT connectors, a custom agent) and the demo agent
  * always see identical behaviour and identical real data.
  */
-export function registerAgentReadyTools(server: McpServer) {
+export function registerOmniBuyTools(server: McpServer) {
   server.registerTool(
     "search_products",
     {

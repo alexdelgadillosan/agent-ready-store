@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 const sitemap = "https://www.gymshark.com/sitemap_products_1.xml";
 const limit = Number.parseInt(process.env.CATALOG_BATCH_SIZE || "25", 10);
-const userAgent = "AgentCart/1.0 authorized catalog importer";
+const userAgent = "OmniBuy AI/1.0 authorized catalog importer";
 
 function csv(value) {
   const text = String(value ?? "");

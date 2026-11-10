@@ -27,7 +27,7 @@ Your `SHOPIFY_SHOP` is the domain shown in the browser, for example `agent-demo.
 ### 2. Shopify custom app
 
 1. In the store admin: **Settings → Apps and sales channels → Develop apps**.
-2. **Create an app**, name it `Agent-Ready Store`.
+2. **Create an app**, name it `OmniBuy AI`.
 3. Open **Configuration → Admin API integration** and enable these scopes:
 
    ```
@@ -46,7 +46,7 @@ If the store is brand new, the app may need a minute before the token works.
 ### 3. PayPal sandbox app
 
 1. Open <https://developer.paypal.com/dashboard/applications/sandbox>.
-2. **Create App**, name it `Agent-Ready Store`.
+2. **Create App**, name it `OmniBuy AI`.
 3. Copy the **Client ID** and **Secret** into `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET`.
 4. Create a **sandbox buyer account** at <https://developer.paypal.com/dashboard/accounts>:
    - Type: **Personal**
