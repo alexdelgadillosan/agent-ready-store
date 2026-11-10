@@ -26,10 +26,10 @@ import {
   createPayPalOrder,
   getCaptureId,
 } from "./paypal";
+import { env } from "./env";
 
 const MAX_QUANTITY_PER_VARIANT = 10;
 const MAX_CART_TOTAL_CENTS = 50_000;
-const RESERVATION_TTL_MINUTES = 10;
 
 export type SearchProductsInput = {
   query: string;
@@ -311,7 +311,7 @@ export async function createCart(input: CreateCartInput) {
     });
 
     const expiresAt = new Date(
-      Date.now() + RESERVATION_TTL_MINUTES * 60 * 1000,
+      Date.now() + env.checkoutTtlMinutes * 60 * 1000,
     );
 
     const [cart] = await db
@@ -512,7 +512,7 @@ export async function completeCheckout(input: CompleteCheckoutInput) {
       .set({
         status: "open",
         ...(captured
-          ? { expiresAt: new Date(Date.now() + 10 * 60 * 1000) }
+          ? { expiresAt: new Date(Date.now() + env.checkoutTtlMinutes * 60 * 1000) }
           : {}),
       })
       .where(and(eq(carts.id, cart.id), eq(carts.status, "processing")));

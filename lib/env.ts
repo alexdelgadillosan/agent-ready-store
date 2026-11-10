@@ -57,6 +57,10 @@ export const env = {
   get appUrl() {
     return (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
   },
+  get checkoutTtlMinutes() {
+    const value = Number.parseInt(process.env.CHECKOUT_TTL_MINUTES || "30", 10);
+    return Number.isFinite(value) && value >= 10 && value <= 120 ? value : 30;
+  },
   get mcpBearerToken() {
     return process.env.MCP_BEARER_TOKEN || "";
   },

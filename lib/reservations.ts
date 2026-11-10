@@ -1,8 +1,7 @@
 import { and, eq, gt, inArray, sql } from "drizzle-orm";
 import { db } from "./db";
 import { reservations, variants } from "./schema";
-
-const RESERVATION_TTL_MINUTES = 10;
+import { env } from "./env";
 
 export type ReservationItem = {
   variantId: string;
@@ -100,7 +99,7 @@ export async function reserveItems(
         quantity: item.quantity,
         status: "active",
         expiresAt: new Date(
-          Date.now() + RESERVATION_TTL_MINUTES * 60 * 1000,
+          Date.now() + env.checkoutTtlMinutes * 60 * 1000,
         ),
       });
     }
