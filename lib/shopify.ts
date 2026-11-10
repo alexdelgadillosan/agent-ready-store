@@ -365,7 +365,6 @@ interface DraftOrderCompleteData {
     draftOrder: {
       id: string;
       name: string;
-      order: { id: string; name: string } | null;
     } | null;
     userErrors: Array<{ field: string[] | null; message: string }>;
   };
@@ -377,10 +376,6 @@ const DRAFT_ORDER_COMPLETE = /* GraphQL */ `
       draftOrder {
         id
         name
-        order {
-          id
-          name
-        }
       }
       userErrors {
         field
@@ -522,8 +517,10 @@ export async function completeDraftOrder(draftOrderId: string): Promise<{
   }
 
   return {
-    shopifyOrderId: draftOrder.order?.id ?? null,
-    shopifyOrderName: draftOrder.order?.name ?? draftOrder.name,
+      // The order field requires read_orders, which is intentionally not
+      // requested. Completing the draft order still creates the Shopify order.
+      shopifyOrderId: null,
+      shopifyOrderName: draftOrder.name,
   };
 }
 
