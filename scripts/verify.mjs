@@ -93,13 +93,6 @@ async function main() {
       }
     }
 
-    if (process.env.CHANNEL3_API_KEY) {
-      if (names.includes("search_external_products")) {
-        console.log("· Channel3 external discovery tool registered");
-      } else {
-        fail("CHANNEL3_API_KEY is set but search_external_products is missing");
-      }
-    }
   } catch (error) {
     fail(`MCP tools/list failed: ${error.message}`);
   }

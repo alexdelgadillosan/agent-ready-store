@@ -90,7 +90,6 @@ LLM_MODEL=gpt-4.1-mini
 
 # Optional
 MCP_BEARER_TOKEN=
-CHANNEL3_API_KEY=
 ```
 
 ### 6. Verify before the demo
@@ -113,22 +112,3 @@ npm run verify -- http://localhost:3100
 - The Shopify token grants Admin API access to the store. Use a development store, not a live merchant store.
 - Rotate the PayPal secret and LLM key after the hackathon if the deployment is public.
 - Set `MCP_BEARER_TOKEN` on a public deployment so only your agent can call the tools.
-
-## Channel3
-
-The optional sixth MCP tool, `search_external_products`, is implemented against the documented Channel3 API:
-
-```
-POST https://api.trychannel3.com/v1/search
-x-api-key: $CHANNEL3_API_KEY
-```
-
-It is registered **only** when `CHANNEL3_API_KEY` is set, so it never appears as a broken or fake tool. It returns external retailer offers and is deliberately kept out of the Shopify cart: `create_cart` only accepts variant GIDs from the connected store.
-
-Set the key in `.env.local`, restart the dev server, and run:
-
-```bash
-npm run verify -- http://localhost:3100
-```
-
-The verifier will confirm that `search_external_products` is registered when the key is present.

@@ -1,5 +1,4 @@
 import { env } from "./env";
-import { isChannel3Configured, searchExternalProducts } from "./channel3";
 import {
   completeCheckout,
   createCart,
@@ -60,10 +59,6 @@ type ChatCompletionResponse = {
 const MAX_STEPS = 8;
 
 function systemPrompt(): string {
-  const external = isChannel3Configured()
-    ? `\n10. Channel3 provides real external discovery. If the buyer explicitly asks for external offers, a retailer or brand outside this Shopify store (for example Gymshark or Rothy's), or if search_products returns no matching products, call search_external_products. Clearly label every result as an external offer, show the retailer, price, currency and original URL, and explain that it cannot be purchased through AgentCart's Shopify cart. Never pass a Channel3 product ID to create_cart. If the buyer asks to buy an external offer, send them to the original retailer URL instead.`
-    : "";
-
   return `You are the buyer agent for AgentCart, an agentic commerce layer for a real Shopify store.
 
 Your job: help a human buyer find real products in the connected Shopify catalog, build a cart, and start a real PayPal order. You never invent products, prices, stock, variant IDs, discounts or delivery promises. Everything you state about the catalog must come from a tool result.
@@ -79,7 +74,7 @@ Rules:
 6. Do not call complete_checkout on your own. Only call it if the buyer explicitly says they already approved the payment and asks you to finalize, or if they ask for the status and the order is still pending.
 7. Use get_cart_status when the buyer asks about an existing cart or order.
 8. If a tool returns an error, explain it plainly and offer a next step. Never hide an error.
-9. Keep answers short and concrete. No marketing fluff.${external}
+9. Keep answers short and concrete. No marketing fluff. Only recommend and sell products returned by this Shopify store's tools. If there is no match, say so and ask whether the buyer wants to try another search. Never redirect the buyer to an external retailer.
 
 The store is ${env.shopifyShop}. Today is ${new Date().toISOString().slice(0, 10)}.`;
 }
@@ -234,41 +229,7 @@ const CORE_TOOL_DEFINITIONS: ToolDefinition[] = [
 ];
 
 function toolDefinitions(): ToolDefinition[] {
-  const definitions: ToolDefinition[] = [...CORE_TOOL_DEFINITIONS];
-
-  if (isChannel3Configured()) {
-    definitions.push({
-      type: "function",
-      function: {
-        name: "search_external_products",
-        description:
-          "Search Channel3's real product graph for products that are NOT in this Shopify store. Returns external retailer offers with prices and buy links. These items cannot be added to a cart here.",
-        parameters: {
-          type: "object",
-          properties: {
-            query: {
-              type: "string",
-              description: "What the buyer is looking for",
-            },
-            max_price_cents: {
-              type: "integer",
-              description: "Maximum offer price in cents",
-            },
-            limit: {
-              type: "integer",
-              minimum: 1,
-              maximum: 30,
-              default: 8,
-            },
-          },
-          required: ["query"],
-          additionalProperties: false,
-        },
-      },
-    });
-  }
-
-  return definitions;
+  return [...CORE_TOOL_DEFINITIONS];
 }
 
 async function callModel(
@@ -377,18 +338,6 @@ async function executeTool(
       case "get_cart_status": {
         const output = await getCartStatus(String(input.cart_id ?? ""));
         await logAgentEvent(name, input, output, String(input.cart_id ?? ""));
-        return { ok: true, output };
-      }
-      case "search_external_products": {
-        const output = await searchExternalProducts({
-          query: String(input.query ?? ""),
-          maxPriceCents:
-            typeof input.max_price_cents === "number"
-              ? input.max_price_cents
-              : undefined,
-          limit: typeof input.limit === "number" ? input.limit : 8,
-        });
-        await logAgentEvent(name, input, output);
         return { ok: true, output };
       }
       case "complete_checkout": {

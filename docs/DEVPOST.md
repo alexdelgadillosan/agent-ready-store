@@ -31,7 +31,6 @@ No early access. No mocked catalog. No scripted payment result.
    - `create_cart`
    - `get_cart_status`
    - `complete_checkout`
-   - `search_external_products` (optional; registered only when `CHANNEL3_API_KEY` is set, and never part of the Shopify cart)
 3. **Inventory reservations** — `create_cart` takes `pg_advisory_xact_lock(hashtext(variant_id))`, validates available stock, and inserts a 10-minute reservation. Two agents cannot reserve the last unit.
 4. **Real cart totals** — a Shopify Draft Order is created for the requested variants and address. Shopify computes subtotal and tax, and the demo store uses an explicit free-shipping line. The PayPal order uses that exact total.
 5. **Real payment** — PayPal Orders v2 create → buyer approval → capture, with `PayPal-Request-Id` idempotency.
@@ -50,7 +49,6 @@ PayPal is the payment layer that already has buyer trust and a sandbox that beha
 - Shopify Admin GraphQL API `2026-10`
 - PayPal Orders v2 (sandbox)
 - OpenAI-compatible chat completions with tool calling
-- Channel3 product graph (optional external discovery)
 - AG Grid Community 36 (Quartz theming)
 - Render
 
@@ -76,7 +74,6 @@ Everything is real except the PayPal money, which is sandbox money because the h
 
 - Single merchant via a custom-app token (OAuth is out of scope).
 - The demo has no admin authentication; protect the deployment before production.
-- Channel3 is not integrated because no real API key was available.
 - Sandbox payments only in the submission.
 
 ## Links

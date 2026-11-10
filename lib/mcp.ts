@@ -8,7 +8,6 @@ import {
   logAgentEvent,
   searchProducts,
 } from "./tools";
-import { isChannel3Configured, searchExternalProducts } from "./channel3";
 
 const addressSchema = z.object({
   address1: z.string().optional(),
@@ -217,45 +216,4 @@ export function registerAgentReadyTools(server: McpServer) {
     },
   );
 
-  // Optional, real Channel3 discovery. Registered only when a key is present,
-  // so an unconfigured deployment never advertises a tool it cannot run.
-  if (isChannel3Configured()) {
-    server.registerTool(
-      "search_external_products",
-      {
-        title: "Search external products (Channel3)",
-        description:
-          "Search Channel3's real product graph for products that are NOT in this Shopify store. Returns external retailer offers with prices and buy links. These items cannot be added to a cart here; use this only when the merchant's own catalog has no match, and label the results as external.",
-        inputSchema: z.object({
-          query: z.string().min(1).describe("What the buyer is looking for"),
-          max_price_cents: z
-            .number()
-            .int()
-            .positive()
-            .optional()
-            .describe("Only return offers at or below this price in cents"),
-          limit: z
-            .number()
-            .int()
-            .min(1)
-            .max(30)
-            .default(8)
-            .describe("Maximum number of products to return"),
-        }),
-      },
-      async (input) => {
-        try {
-          const output = await searchExternalProducts({
-            query: input.query,
-            maxPriceCents: input.max_price_cents,
-            limit: input.limit,
-          });
-          await logAgentEvent("search_external_products", input, output);
-          return { content: [{ type: "text", text: toText(output) }] };
-        } catch (error) {
-          return errorResult(error);
-        }
-      },
-    );
-  }
 }

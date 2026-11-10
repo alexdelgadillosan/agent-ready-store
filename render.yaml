@@ -41,8 +41,6 @@ services:
         value: openai/gpt-oss-120b
       - key: MCP_BEARER_TOKEN
         sync: false
-      - key: CHANNEL3_API_KEY
-        sync: false
 
 databases:
   - name: agent-ready-store-db

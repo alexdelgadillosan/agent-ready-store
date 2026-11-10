@@ -64,7 +64,4 @@ export const env = {
   get mcpBearerToken() {
     return process.env.MCP_BEARER_TOKEN || "";
   },
-  get channel3ApiKey() {
-    return process.env.CHANNEL3_API_KEY || "";
-  },
 };
