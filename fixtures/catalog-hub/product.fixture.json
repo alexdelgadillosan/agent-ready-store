@@ -1,0 +1,47 @@
+{
+  "schema_version": "catalog-hub.product.v1",
+  "fixture": true,
+  "product": {
+    "id": "fixture-mug-001",
+    "title": "Fixture Ceramic Mug",
+    "description": "Synthetic test record; not a real product or offer.",
+    "source": {
+      "name": "Catalog Hub fixture generator",
+      "url": "https://catalog-hub.example.invalid/fixtures",
+      "record_id": "FIXTURE-001"
+    },
+    "license": {
+      "name": "Fixture data license",
+      "url": "https://catalog-hub.example.invalid/licenses/fixture",
+      "attribution": "Synthetic data for automated tests only"
+    },
+    "images": [
+      {
+        "url": "https://images.example.invalid/fixtures/mug-blue.jpg",
+        "alt": "Synthetic blue mug fixture image",
+        "license": {
+          "name": "Fixture image license",
+          "url": "https://catalog-hub.example.invalid/licenses/fixture-image"
+        }
+      }
+    ],
+    "variants": [
+      {
+        "id": "fixture-mug-001-blue",
+        "title": "Blue",
+        "sku": "FIXTURE-MUG-BLUE",
+        "original_price": 12.5,
+        "currency": "USD",
+        "inventory": 7
+      },
+      {
+        "id": "fixture-mug-001-green",
+        "title": "Green",
+        "sku": "FIXTURE-MUG-GREEN",
+        "original_price": 12.5,
+        "currency": "USD",
+        "inventory": 0
+      }
+    ]
+  }
+}

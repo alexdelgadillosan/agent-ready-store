@@ -15,6 +15,7 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
     "verify": "node --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/verify.mjs",
+    "validate:catalog-hub": "node scripts/validate-catalog-hub.mjs",
     "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts"
   },
   "dependencies": {
