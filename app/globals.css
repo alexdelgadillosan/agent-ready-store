@@ -12,6 +12,11 @@
   --accent-soft: rgba(27, 107, 83, 0.09);
   --green: #198754;
   --green-soft: rgba(25, 135, 84, 0.1);
+  --success-text: #146c43;
+  --success-strong: #0f5132;
+  --link: #8a5d0c;
+  --error-text: #9b1c1c;
+  --warning-text: #805b00;
   --amber: #fbbf24;
   --red: #f87171;
   --radius: 14px;
@@ -33,6 +38,11 @@ html[data-theme="dark"] {
   --accent-soft: rgba(115, 210, 165, 0.12);
   --green: #65d49d;
   --green-soft: rgba(101, 212, 157, 0.12);
+  --success-text: #a7f3d0;
+  --success-strong: #c7f5e4;
+  --link: #ffd479;
+  --error-text: #fecaca;
+  --warning-text: #fde68a;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
 }
 
@@ -451,12 +461,12 @@ textarea {
 .callout h3 {
   margin: 0 0 8px;
   font-size: 15px;
-  color: #a7f3d0;
+  color: var(--success-text);
 }
 
 .callout p {
   margin: 0;
-  color: #c7f5e4;
+  color: var(--success-strong);
   font-size: 13.5px;
   line-height: 1.6;
 }
@@ -478,13 +488,13 @@ textarea {
 .tag-green {
   border-color: rgba(52, 211, 153, 0.35);
   background: var(--green-soft);
-  color: #a7f3d0;
+  color: var(--success-text);
 }
 
 .tag-blue {
   border-color: rgba(91, 140, 255, 0.35);
   background: var(--accent-soft);
-  color: #bcd0ff;
+  color: var(--accent);
 }
 
 /* Chat */
@@ -573,7 +583,7 @@ html[data-theme="dark"] .step {
   background: #f5f8f5;
   border: 1px solid var(--border);
   border-bottom-left-radius: 5px;
-  color: #dbe6fb;
+  color: var(--text);
 }
 
 .msg-user {
@@ -584,7 +594,7 @@ html[data-theme="dark"] .step {
 }
 
 .msg a {
-  color: #ffd479;
+  color: var(--link);
   text-decoration: underline;
 }
 
@@ -666,7 +676,7 @@ html[data-theme="dark"] .step {
   cursor: pointer;
   font-size: 12.5px;
   font-family: var(--mono);
-  color: #bcd0ff;
+  color: var(--accent);
   list-style: none;
 }
 
@@ -775,6 +785,10 @@ html[data-theme="dark"] .step {
   font-family: var(--mono);
 }
 
+.mono-accent {
+  color: var(--accent);
+}
+
 .muted {
   color: var(--text-muted);
 }
@@ -810,7 +824,7 @@ html[data-theme="dark"] .step {
 .error-box {
   border: 1px solid rgba(248, 113, 113, 0.35);
   background: rgba(248, 113, 113, 0.1);
-  color: #fecaca;
+  color: var(--error-text);
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 13px;
@@ -821,7 +835,7 @@ html[data-theme="dark"] .step {
 .notice-box {
   border: 1px solid rgba(251, 191, 36, 0.3);
   background: rgba(251, 191, 36, 0.08);
-  color: #fde68a;
+  color: var(--warning-text);
   border-radius: 10px;
   padding: 12px 14px;
   font-size: 13px;
@@ -831,7 +845,7 @@ html[data-theme="dark"] .step {
 .success-box {
   border: 1px solid rgba(52, 211, 153, 0.35);
   background: rgba(52, 211, 153, 0.1);
-  color: #bbf7d0;
+  color: var(--success-text);
   border-radius: 10px;
   padding: 14px 16px;
   font-size: 13.5px;

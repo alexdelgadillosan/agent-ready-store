@@ -139,7 +139,7 @@ export default function HomePage() {
             <p className="small">
               Point any Streamable HTTP MCP client at:
             </p>
-            <p className="mono small" style={{ marginTop: 10, color: "#bcd0ff" }}>
+             <p className="mono small mono-accent" style={{ marginTop: 10 }}>
               {`${"${APP_URL}"}/api/mcp`}
             </p>
             <p className="small" style={{ marginTop: 12 }}>
