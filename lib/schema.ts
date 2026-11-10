@@ -174,6 +174,9 @@ export const catalogProducts = pgTable(
     title: text("title").notNull(),
     description: text("description").notNull().default(""),
     images: jsonb("images").$type<CatalogImage[]>().notNull(),
+    shopifyProductId: text("shopify_product_id"),
+    publishStatus: text("publish_status").notNull().default("unpublished"),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
@@ -191,6 +194,9 @@ export const catalogVariants = pgTable(
     originalPriceCents: integer("original_price_cents").notNull(),
     currency: text("currency").notNull(),
     inventory: integer("inventory").notNull(),
+    shopifyVariantId: text("shopify_variant_id"),
+    shopifyInventoryItemId: text("shopify_inventory_item_id"),
+    publishError: text("publish_error"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },
@@ -231,6 +237,22 @@ export const catalogProvenance = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [index("catalog_provenance_import_idx").on(table.importId)],
+);
+
+export const catalogPublishJobs = pgTable(
+  "catalog_publish_jobs",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    status: text("status").notNull().default("running"),
+    dryRun: integer("dry_run").notNull().default(1),
+    productCount: integer("product_count").notNull().default(0),
+    publishedCount: integer("published_count").notNull().default(0),
+    failedCount: integer("failed_count").notNull().default(0),
+    errors: jsonb("errors").$type<string[]>().notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+  },
+  (table) => [index("catalog_publish_jobs_created_idx").on(table.createdAt)],
 );
 
 export type CartItemRecord = {

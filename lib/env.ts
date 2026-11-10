@@ -75,6 +75,6 @@ export const env = {
     return Number.isFinite(value) && value >= 60 && value <= 86_400 ? value : 900;
   },
   get fxBaseCurrency() {
-    return (process.env.FX_BASE_CURRENCY || "EUR").trim().toUpperCase();
+    return (process.env.FX_BASE_CURRENCY || "USD").trim().toUpperCase();
   },
 };

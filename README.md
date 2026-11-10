@@ -1,4 +1,4 @@
-# Agent-Ready Store
+# AgentCart
 
 **Real agentic commerce for Shopify.** A public MCP server, a real LLM buyer, real inventory reservations, real Shopify Draft Orders and real PayPal Orders v2 checkout — with a merchant dashboard built on AG Grid.
 
@@ -38,6 +38,27 @@ No claims of integration with ChatGPT or Gemini. No early-access features. No mo
 **Sandbox is not a mock.** The PayPal sandbox is the production Orders v2 API with test credentials. The same code runs against live credentials by changing `PAYPAL_ENV=live`; the hackathon requires sandbox for submissions.
 
 There is **no seed script, no fake product list, no simulated payment result and no hardcoded order**.
+
+### Catalog Hub
+
+Catalog Hub accepts the documented CSV and JSON contracts at `/api/catalog-hub/import`.
+Use `mode: "preview"` before committing an import. Imported products can then be
+reviewed with `POST /api/catalog-hub/publish` using `mode: "dry-run"`; only an
+explicit `mode: "commit"` publishes active Shopify products, images, variants and
+inventory. Fixtures are never publishable production data.
+
+Publishing requires a real source and valid provenance. Brand catalogs are not
+generated or copied from an unverified dataset: add only sources for which the
+merchant has permission or an explicit feed/API license. The generic importer
+supports any brand once its authorized CSV/JSON feed is available.
+
+### Currency policy
+
+The intended Shopify store currency is **USD**. Set the store's base currency in
+Shopify Admin before production use; the Admin API flow does not silently change
+that store setting. AgentCart's Frankfurter/BCE rates are dated display/reference
+quotes only. Shopify remains the source of truth for Draft Order totals and PayPal
+is charged only with the amount and currency returned by Shopify.
 
 ---
 
@@ -79,7 +100,7 @@ There is **no seed script, no fake product list, no simulated payment result and
 3. `create_cart`:
    - validates limits and available stock,
    - takes `pg_advisory_xact_lock(hashtext(variant_id))` per variant,
-   - inserts `reservations` with a 10-minute TTL,
+    - inserts `reservations` with the configured checkout TTL (30 minutes by default),
    - creates a Shopify Draft Order and calculates real totals,
    - creates a PayPal order for that exact total.
 4. The buyer opens the PayPal approval URL and approves with a sandbox buyer account.

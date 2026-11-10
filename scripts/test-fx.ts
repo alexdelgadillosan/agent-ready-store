@@ -9,18 +9,18 @@ const client = createFxClient({
   fetcher: async (input) => {
     calls += 1;
     const url = String(input);
-    assert.match(url, /from=EUR/);
+    assert.match(url, /from=USD/);
     return new Response(JSON.stringify({
-      base: "EUR",
+      base: "USD",
       date: "2026-11-06",
-      rates: { MXN: 20, USD: 2, CAD: 3, GBP: 0.5 },
+      rates: { MXN: 20, CAD: 3, EUR: 0.5, GBP: 0.4 },
     }), { status: 200 });
   },
 });
 
 async function main() {
   const first = await client.convert(10, "usd", "mxn");
-  assert.equal(first.amount, 100);
+  assert.equal(first.amount, 200);
   assert.equal(first.provider, "Frankfurter (ECB reference rates)");
   assert.equal(first.timestamp, "2026-11-06T00:00:00.000Z");
   await client.getRates();

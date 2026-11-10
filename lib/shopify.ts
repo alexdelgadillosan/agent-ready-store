@@ -554,3 +554,102 @@ export async function decrementCachedStock(
       );
   }
 }
+
+export type ShopifyPublishVariant = {
+  sku: string;
+  title?: string;
+  price: number;
+  inventory: number;
+};
+
+export type ShopifyPublishedProduct = {
+  productId: string;
+  variants: Array<{ sku: string; id: string; inventoryItemId: string }>;
+};
+
+const PRODUCT_CREATE = /* GraphQL */ `
+  mutation ProductCreate($input: ProductInput!) {
+    productCreate(input: $input) {
+      product { id }
+      userErrors { field message }
+    }
+  }
+`;
+
+const PRODUCT_VARIANTS_BULK_CREATE = /* GraphQL */ `
+  mutation ProductVariantsBulkCreate($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+    productVariantsBulkCreate(productId: $productId, variants: $variants) {
+      productVariants { id sku inventoryItem { id } }
+      userErrors { field message }
+    }
+  }
+`;
+
+const LOCATIONS_QUERY = /* GraphQL */ `
+  query Locations { locations(first: 1, includeInactive: false) { nodes { id } } }
+`;
+
+const INVENTORY_SET = /* GraphQL */ `
+  mutation InventorySet($input: InventorySetQuantitiesInput!) {
+    inventorySetQuantities(input: $input) {
+      userErrors { field message }
+    }
+  }
+`;
+
+type PublishMutation = {
+  productCreate?: { product: { id: string } | null; userErrors: Array<{ message: string }> };
+  productVariantsBulkCreate?: { productVariants: Array<{ id: string; sku: string | null; inventoryItem: { id: string } }>; userErrors: Array<{ message: string }> };
+};
+
+/** Publishes one already-validated Catalog Hub product. Never accepts client prices. */
+export async function publishCatalogProduct(input: {
+  title: string;
+  description: string;
+  images: string[];
+  variants: ShopifyPublishVariant[];
+}): Promise<ShopifyPublishedProduct> {
+  if (!input.variants.length) throw new Error("Cannot publish a product without variants");
+  const created = await shopifyGraphQL<PublishMutation>(PRODUCT_CREATE, {
+    input: { title: input.title, descriptionHtml: input.description, status: "ACTIVE" },
+  });
+  const productError = created.productCreate?.userErrors ?? [];
+  assertNoUserErrors(productError.map((error) => ({ field: null, message: error.message })), "Shopify productCreate");
+  const productId = created.productCreate?.product?.id;
+  if (!productId) throw new Error("Shopify did not return the created product");
+
+  if (input.images.length) {
+    const media = await shopifyGraphQL<{ productCreateMedia: { userErrors: Array<{ message: string }> } }>(
+      `mutation ProductMedia($productId: ID!, $media: [CreateMediaInput!]!) { productCreateMedia(productId: $productId, media: $media) { userErrors { message } } }`,
+      { productId, media: input.images.map((originalSource) => ({ mediaContentType: "IMAGE", originalSource })) },
+    );
+    assertNoUserErrors(media.productCreateMedia.userErrors.map((error) => ({ field: null, message: error.message })), "Shopify productCreateMedia");
+  }
+
+  const variants = await shopifyGraphQL<PublishMutation>(PRODUCT_VARIANTS_BULK_CREATE, {
+    productId,
+    variants: input.variants.map((variant) => ({
+      price: variant.price.toFixed(2),
+      sku: variant.sku,
+      optionValues: [{ optionName: "Title", name: variant.title || "Default Title" }],
+    })),
+  });
+  const variantError = variants.productVariantsBulkCreate?.userErrors ?? [];
+  assertNoUserErrors(variantError.map((error) => ({ field: null, message: error.message })), "Shopify productVariantsBulkCreate");
+  const saved = variants.productVariantsBulkCreate?.productVariants ?? [];
+  if (saved.length !== input.variants.length) throw new Error("Shopify returned an incomplete variant list");
+
+  const locations = await shopifyGraphQL<{ locations: { nodes: Array<{ id: string }> } }>(LOCATIONS_QUERY);
+  const locationId = locations.locations.nodes[0]?.id;
+  if (!locationId) throw new Error("Shopify has no active inventory location");
+  const quantities = saved.map((variant, index) => ({
+    inventoryItemId: variant.inventoryItem.id,
+    locationId,
+    quantity: input.variants[index].inventory,
+  }));
+  const inventory = await shopifyGraphQL<{ inventorySetQuantities: { userErrors: Array<{ message: string }> } }>(INVENTORY_SET, {
+    input: { name: "available", reason: "correction", ignoreCompareQuantity: true, quantities },
+  });
+  assertNoUserErrors(inventory.inventorySetQuantities.userErrors.map((error) => ({ field: null, message: error.message })), "Shopify inventorySetQuantities");
+  return { productId, variants: saved.map((variant, index) => ({ sku: input.variants[index].sku, id: variant.id, inventoryItemId: variant.inventoryItem.id })) };
+}
