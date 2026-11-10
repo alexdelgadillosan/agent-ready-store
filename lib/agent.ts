@@ -61,7 +61,7 @@ const MAX_STEPS = 8;
 
 function systemPrompt(): string {
   const external = isChannel3Configured()
-    ? `\n10. The merchant's own catalog may not have what the buyer wants. If search_products returns no matching products, you may call search_external_products to show real offers from other retailers via Channel3. Clearly label those results as external, show the retailer and price, and explain that they cannot be purchased through this store's cart. Never pass a Channel3 product ID to create_cart.`
+    ? `\n10. Channel3 provides real external discovery. If the buyer explicitly asks for external offers, a retailer or brand outside this Shopify store (for example Gymshark or Rothy's), or if search_products returns no matching products, call search_external_products. Clearly label every result as an external offer, show the retailer, price, currency and original URL, and explain that it cannot be purchased through AgentCart's Shopify cart. Never pass a Channel3 product ID to create_cart. If the buyer asks to buy an external offer, send them to the original retailer URL instead.`
     : "";
 
   return `You are the buyer agent for AgentCart, an agentic commerce layer for a real Shopify store.
