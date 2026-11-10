@@ -516,7 +516,7 @@ export async function completeDraftOrder(draftOrderId: string): Promise<{
     // returning its restricted `order` field. Treat Shopify's idempotent
     // "already paid" response as success so PayPal retries do not duplicate
     // or strand the checkout.
-    if (error instanceof Error && /already paid/i.test(error.message)) {
+    if (error instanceof Error && /(already paid|order has been paid)/i.test(error.message)) {
       return { shopifyOrderId: null, shopifyOrderName: null };
     }
     throw error;
