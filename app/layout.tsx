@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
             <nav className="nav">
               <Link href="/chat">Shop with AI</Link>
               <Link href="/dashboard">Merchant view</Link>
+              <ThemeToggle />
               <a
                 href="https://modelcontextprotocol.io"
                 target="_blank"
