@@ -16,7 +16,9 @@
     "db:migrate": "drizzle-kit migrate",
     "verify": "node --env-file-if-exists=.env.local --env-file-if-exists=.env scripts/verify.mjs",
     "validate:catalog-hub": "node scripts/validate-catalog-hub.mjs",
-    "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts"
+    "test:catalog-hub": "node --import tsx scripts/test-catalog-hub.ts",
+    "test:reservations": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-reservations.ts",
+    "test:fx": "node --env-file-if-exists=.env.local --env-file-if-exists=.env --import tsx scripts/test-fx.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.4.0",

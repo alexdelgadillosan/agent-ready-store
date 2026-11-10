@@ -64,4 +64,17 @@ export const env = {
   get mcpBearerToken() {
     return process.env.MCP_BEARER_TOKEN || "";
   },
+  get fxProviderUrl() {
+    return (process.env.FX_PROVIDER_URL || "https://api.frankfurter.app").replace(
+      /\/$/,
+      "",
+    );
+  },
+  get fxCacheTtlSeconds() {
+    const value = Number.parseInt(process.env.FX_CACHE_TTL_SECONDS || "900", 10);
+    return Number.isFinite(value) && value >= 60 && value <= 86_400 ? value : 900;
+  },
+  get fxBaseCurrency() {
+    return (process.env.FX_BASE_CURRENCY || "EUR").trim().toUpperCase();
+  },
 };

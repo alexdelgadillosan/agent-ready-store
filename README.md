@@ -128,6 +128,7 @@ components/                    Chat, Dashboard, AG Grid, return page
 lib/
   shopify.ts                   Admin GraphQL, draft orders, stock cache
   paypal.ts                    OAuth, create/capture/webhook verification
+  fx.ts                        ECB reference FX rates via Frankfurter, TTL cache
   reservations.ts              advisory-lock reservations + TTL
   tools.ts                     shared tool implementations
   mcp.ts                       MCP tool registration
@@ -238,8 +239,26 @@ Open <http://localhost:3000/chat>, ask for a product, provide a shipping address
 | `LLM_MODEL` | no | Defaults to `gpt-4.1-mini` |
 | `APP_URL` | yes | Public URL used for PayPal return/cancel URLs |
 | `MCP_BEARER_TOKEN` | no | If set, `/api/mcp` requires this bearer token |
+| `FX_PROVIDER_URL` | no | Defaults to Frankfurter `https://api.frankfurter.app` |
+| `FX_CACHE_TTL_SECONDS` | no | In-memory cache TTL, 60–86400 seconds; default `900` |
+| `FX_BASE_CURRENCY` | no | Base currency for the table; default `EUR` |
 
 The Shopify token, PayPal secret, LLM key and database URL never reach the browser.
+
+### FX reference rates and limits
+
+`lib/fx.ts` reads the public Frankfurter API, which publishes ECB reference rates, for
+`MXN`, `USD`, `CAD`, `EUR` and `GBP`. Each returned table includes the provider and
+the provider's date (`timestamp`). Rates are cached in process memory until the
+configured TTL expires; a restart, deploy, or multiple app instances create separate
+caches. The client rejects missing, non-positive, or malformed rates and never
+invents a fallback value.
+
+These are reference/display rates, not guaranteed settlement, card, tax, or Shopify
+Markets rates. FX is intentionally not connected to Shopify checkout, Draft Orders,
+PayPal amounts, or Catalog Hub schema yet. Do not use `convert` to charge a buyer
+without a separately agreed pricing/rounding policy and a provider appropriate for
+financial settlement. Run the offline checks with `npm run test:fx`.
 
 ---
 

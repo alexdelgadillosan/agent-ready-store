@@ -147,6 +147,92 @@ export const agentEvents = pgTable(
   (table) => [index("agent_events_created_idx").on(table.createdAt)],
 );
 
+// Catalog Hub is intentionally separate from the Shopify catalog above. These
+// tables store source records and provenance only; they are never used by the
+// checkout or Shopify sync paths.
+export const catalogSources = pgTable(
+  "catalog_sources",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+    url: text("url").notNull(),
+    recordId: text("record_id").notNull(),
+    licenseName: text("license_name").notNull(),
+    licenseUrl: text("license_url").notNull(),
+    licenseAttribution: text("license_attribution"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("catalog_sources_identity_idx").on(table.url, table.recordId)],
+);
+
+export const catalogProducts = pgTable(
+  "catalog_products",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    sourceId: uuid("source_id").notNull(),
+    externalId: text("external_id").notNull(),
+    title: text("title").notNull(),
+    description: text("description").notNull().default(""),
+    images: jsonb("images").$type<CatalogImage[]>().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("catalog_products_source_external_idx").on(table.sourceId, table.externalId)],
+);
+
+export const catalogVariants = pgTable(
+  "catalog_variants",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    productId: uuid("product_id").notNull(),
+    externalId: text("external_id").notNull(),
+    title: text("title").notNull().default(""),
+    sku: text("sku").notNull(),
+    originalPriceCents: integer("original_price_cents").notNull(),
+    currency: text("currency").notNull(),
+    inventory: integer("inventory").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("catalog_variants_product_external_idx").on(table.productId, table.externalId),
+    uniqueIndex("catalog_variants_sku_idx").on(table.sku),
+  ],
+);
+
+export const catalogImports = pgTable(
+  "catalog_imports",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    format: text("format").notNull(),
+    mode: text("mode").notNull(),
+    fixture: integer("fixture").notNull().default(0),
+    status: text("status").notNull(),
+    productCount: integer("product_count").notNull().default(0),
+    variantCount: integer("variant_count").notNull().default(0),
+    payload: jsonb("payload").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("catalog_imports_created_idx").on(table.createdAt)],
+);
+
+export const catalogProvenance = pgTable(
+  "catalog_provenance",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    importId: uuid("import_id").notNull(),
+    entityType: text("entity_type").notNull(),
+    entityKey: text("entity_key").notNull(),
+    sourceUrl: text("source_url").notNull(),
+    sourceRecordId: text("source_record_id").notNull(),
+    licenseName: text("license_name").notNull(),
+    licenseUrl: text("license_url").notNull(),
+    attribution: text("attribution"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("catalog_provenance_import_idx").on(table.importId)],
+);
+
 export type CartItemRecord = {
   variantId: string;
   shopifyVariantId: string;
@@ -159,3 +245,9 @@ export type Product = typeof products.$inferSelect;
 export type Variant = typeof variants.$inferSelect;
 export type Cart = typeof carts.$inferSelect;
 export type Order = typeof orders.$inferSelect;
+
+export type CatalogImage = {
+  url: string;
+  alt: string;
+  license: { name: string; url: string; attribution?: string };
+};

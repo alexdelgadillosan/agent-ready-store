@@ -41,6 +41,12 @@ services:
         value: openai/gpt-oss-120b
       - key: MCP_BEARER_TOKEN
         sync: false
+      - key: FX_PROVIDER_URL
+        value: https://api.frankfurter.app
+      - key: FX_CACHE_TTL_SECONDS
+        value: "900"
+      - key: FX_BASE_CURRENCY
+        value: EUR
 
 databases:
   - name: agent-ready-store-db
