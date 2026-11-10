@@ -506,10 +506,21 @@ export async function completeDraftOrder(draftOrderId: string): Promise<{
     { id: draftOrderId, paymentPending: false },
   );
 
-  assertNoUserErrors(
-    completed.draftOrderComplete.userErrors,
-    "Shopify draftOrderComplete",
-  );
+  try {
+    assertNoUserErrors(
+      completed.draftOrderComplete.userErrors,
+      "Shopify draftOrderComplete",
+    );
+  } catch (error) {
+    // A previous request can complete the draft order and then fail while
+    // returning its restricted `order` field. Treat Shopify's idempotent
+    // "already paid" response as success so PayPal retries do not duplicate
+    // or strand the checkout.
+    if (error instanceof Error && /already paid/i.test(error.message)) {
+      return { shopifyOrderId: null, shopifyOrderName: null };
+    }
+    throw error;
+  }
 
   const draftOrder = completed.draftOrderComplete.draftOrder;
   if (!draftOrder) {
