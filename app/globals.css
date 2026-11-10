@@ -17,6 +17,13 @@
   --link: #8a5d0c;
   --error-text: #9b1c1c;
   --warning-text: #805b00;
+  --grid-background: #ffffff;
+  --grid-foreground: #10211a;
+  --grid-header-background: #edf4ef;
+  --grid-header-foreground: #52665a;
+  --grid-border: #dce3dc;
+  --grid-odd-row: #f7faf7;
+  --grid-row-hover: #eaf4ed;
   --amber: #fbbf24;
   --red: #f87171;
   --radius: 14px;
@@ -43,6 +50,13 @@ html[data-theme="dark"] {
   --link: #ffd479;
   --error-text: #fecaca;
   --warning-text: #fde68a;
+  --grid-background: #14271f;
+  --grid-foreground: #edf7ef;
+  --grid-header-background: #1b352a;
+  --grid-header-foreground: #a8bdb0;
+  --grid-border: #315145;
+  --grid-odd-row: #10201a;
+  --grid-row-hover: #234536;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
 }
 

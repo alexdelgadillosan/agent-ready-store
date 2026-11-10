@@ -26,13 +26,13 @@ export default function DataGrid({
       className="grid-wrap"
       style={
         {
-          "--ag-background-color": "#0d1424",
-          "--ag-foreground-color": "#e8eefc",
-          "--ag-header-background-color": "#111a2e",
-          "--ag-header-foreground-color": "#94a3b8",
-          "--ag-border-color": "#1f2b44",
-          "--ag-odd-row-background-color": "#0a1120",
-          "--ag-row-hover-color": "#16213a",
+          "--ag-background-color": "var(--grid-background)",
+          "--ag-foreground-color": "var(--grid-foreground)",
+          "--ag-header-background-color": "var(--grid-header-background)",
+          "--ag-header-foreground-color": "var(--grid-header-foreground)",
+          "--ag-border-color": "var(--grid-border)",
+          "--ag-odd-row-background-color": "var(--grid-odd-row)",
+          "--ag-row-hover-color": "var(--grid-row-hover)",
           "--ag-font-family":
             "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
           "--ag-font-size": "13px",

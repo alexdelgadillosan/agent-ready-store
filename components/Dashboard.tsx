@@ -212,7 +212,7 @@ export default function Dashboard() {
             <div className="stack">
               {data.events.map((event) => (
                 <div className="row-between small" key={event.id}>
-                  <span className="mono" style={{ color: "#bcd0ff" }}>
+                   <span className="mono mono-accent">
                     {event.tool}
                   </span>
                   <span className="dim">
